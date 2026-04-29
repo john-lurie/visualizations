@@ -9,6 +9,8 @@ The variable 'freq' is the oscillation frequency of the pendulum in radians
 per second. One full oscillation, a swing back and forth, equals 2π radians.
 This is NOT the angular speed of the pendulum.
 """
+import math
+
 import matplotlib.pyplot as plt
 import numpy as np
 
