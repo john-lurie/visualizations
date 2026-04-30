@@ -4,7 +4,7 @@ import os
 from pendulum import draw_frames
 
 # Create frames for a single oscillation
-draw_frames(duration=2, fps=50, freq=math.pi, loop=True)
+draw_frames(duration=2, fps=50, freq=math.pi)
 
 # Make a video with FFmpeg
 # Animate single oscillation

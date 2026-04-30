@@ -50,7 +50,7 @@ def angular_position(time_arr, freq, angle_init):
 
 
 def draw_frames(duration=4, fps=50, freq=None, length=1.0, gravity=9.8,
-                angle_init=10.0, loop=False):
+                angle_init=10.0):
     """
     Draw frames for animation of a pendulum.
 
@@ -62,18 +62,12 @@ def draw_frames(duration=4, fps=50, freq=None, length=1.0, gravity=9.8,
         length (float, optional) Pendulum length in meters. Default 1.0.
         gravity (float, optional) Acceleration in m/s^2. Default 9.8.
         angle_init (float, optional): Intial angle in degrees. Default 10.0.
-        loop (bool, optional): Set to True if making frames for a loop.
     """
     if freq is None:
         freq = calculate_freq(length, gravity)
 
     # Forces number of frames to be an integer.
     time_arr = np.linspace(0, duration, int(duration * fps))
-    
-    # If making frames for a loop, exclude the last frame.
-    # Prevents a duplicate frame at end/beginning of loop.
-    if loop:
-        time_arr = time_arr[:-1]
     
     angles = angular_position(time_arr, freq=freq, angle_init=angle_init)
     # Convert to radians
