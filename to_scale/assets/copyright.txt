@@ -1,0 +1,13 @@
+All assets used in this software are either in the public domain or under a 
+license that allows free use and modification, including for commercial
+purposes.
+
+Images
+------
+ ** earth_north.jpg **
+Original: https://commons.wikimedia.org/wiki/File:Nord-_und_S%C3%BCdpol_Blue-Marble.jpg
+License: Public Domain (produced by NASA)
+
+** moon_north.jpg **
+Original: https://commons.wikimedia.org/wiki/File:LRO_WAC_North_Pole_Mosaic_(PIA14024).jpg
+License: Public Domain (produced by NASA)
