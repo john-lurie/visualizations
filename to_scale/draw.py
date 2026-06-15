@@ -142,3 +142,39 @@ def earth_moon_orbit_scaling(fig_start=None):
     else:
         for ii in range(len(scl)):
             earth_moon_circle_orbit(scale=scl[ii])
+
+
+def earth_moon_circle_full(filename=None):
+    """
+    Draw the Earth and Moon as circles with a circular orbit at full scale.
+
+    This serves as a brief transition from the scaling demonstration.
+    The problem is that the images used in earth_moon_circle_orbit()
+    have poor contrast and are hard to see at full scale. So generic
+    circles are used here instead.
+
+    Args:
+        filename (str, optional): Name of the image file. If None plt.show().
+    """
+    fig, axis = plt.subplots()
+
+    # Draw the orbit of the Moon as a circle.
+    orbit_moon = Circle(xy=(0, 0), radius=vl.a_m, ec='g', fc='none', lw=0.5)
+    axis.add_patch(orbit_moon)
+
+    # Draw the Earth and Moon as circles.
+    earth = Circle(xy=(0, 0), radius=vl.r_e, fc=vl.fc_e)
+    axis.add_patch(earth)
+    moon = Circle(xy=(vl.a_m, 0), radius=vl.r_m, fc=vl.fc_m)
+    axis.add_patch(moon)
+
+    # The orbit is a circle, so use symmetrical axes limits.
+    limit = 1.2 * vl.a_m
+    axis.set_xlim(-limit, limit)
+    axis.set_ylim(-limit, limit)
+    setup_figure(fig, axis)
+
+    if filename is not None:
+        plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
+    else:
+        plt.show()
