@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Ellipse
 from matplotlib.image import imread
 
+import orbits
 import values as vl
 
 def setup_figure(figure, axis):
@@ -210,6 +211,57 @@ def earth_moon_ellipse_basic(at_focus=True, filename=None):
         # Draw the Earth at the center of the ellipse.
         earth = Circle(xy=(0, 0), radius=vl.r_e, fc=vl.fc_e)
     axis.add_patch(earth)
+
+    # The eccentricity is small, so symmetrical limits still work.
+    limit = 1.2 * vl.a_m
+    axis.set_xlim(-limit, limit)
+    axis.set_ylim(-limit, limit)
+    setup_figure(fig, axis)
+
+    save_or_show(filename)
+
+
+def earth_moon_barycenter(filename=None):
+    """
+    Draw the orbit of the Moon around the Earth-Moon barycenter.
+
+    The location of the Earth also reflects a barycentric orbit,
+    but the orbit itself is not shown.
+
+    Args:
+        filename (str, optional): See save_or_show() docstring.
+    """
+    # Calculate the barycentric ellipses.
+    tuple1, tuple2 = orbits.ellipse_params(vl.a_m, vl.m_e, vl.m_m, vl.e_m)
+    # Unpack.
+    a1, b1, c1 = tuple1
+    a2, b2, c2 = tuple2
+
+    fig, axis = plt.subplots()
+
+    # Draw the Moon's orbit around the barycenter.
+    # The center of this ellipse is at the ORIGIN.
+    orbit_moon = Ellipse(xy=(0, 0), width=2*a2, height=2*b2,
+                         fc='none', ec=vl.ec_orb, lw=0.5)
+    axis.add_patch(orbit_moon)
+
+    # Draw a circle for the Moon.
+    moon = Circle(xy=(a2, 0), radius=vl.r_m, fc=vl.fc_m)
+    axis.add_patch(moon)
+
+    # Draw a circle for the Earth.
+    # Remember, the barycenter is NOT at the origin.
+    # Hence the calculation for the Earth's location: c2+c1-a1
+    earth = Circle(xy=((c2+c1-a1), 0), radius=vl.r_e, fc=vl.fc_e)
+    axis.add_patch(earth)
+
+    # Draw a dot at the barycenter, smaller than the Earth.
+    # Location is defined by the linear eccentricity of the Moon's orbit.
+    bary = Circle(xy=(c2, 0), radius=0.35*vl.r_e, fc='orange')
+    axis.add_patch(bary)
+
+    # Draw a cross at the center of the Moon's orbit.
+    axis.scatter([0], [0], marker='+', s=10, color='red', lw=0.35)
 
     # The eccentricity is small, so symmetrical limits still work.
     limit = 1.2 * vl.a_m

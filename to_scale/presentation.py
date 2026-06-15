@@ -26,3 +26,7 @@ draw.earth_moon_ellipse_basic(filename=file07, at_focus=False)
 # Draw the Moon's orbit as an ellipse with the Earth at ONE FOCUS.
 file08 = './figures/figure008-ellipse_focus.png'
 draw.earth_moon_ellipse_basic(filename=file08)
+
+# Draw the orbits of the Earth and Moon around their barycenter.
+file09 = './figures/figure009_moon_barycenter.png'
+draw.earth_moon_barycenter(filename=file09)
