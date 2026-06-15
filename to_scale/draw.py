@@ -95,8 +95,8 @@ def earth_moon_circle_orbit(scale=1.0, filename=None):
     axis.imshow(img_m, extent=rect_m, aspect='auto', cmap='gray')
 
     # Draw the orbit of the Moon as a circle.
-    orbit_moon = Circle(xy=(0, 0), radius=a_m, ec='w', fc='none', lw=0.5,
-                        zorder=-10)
+    orbit_moon = Circle(xy=(0, 0), radius=a_m, ec=vl.ec_orb, fc='none',
+                        lw=0.5, zorder=-10)
     axis.add_patch(orbit_moon)
 
     # The orbit is a circle, so use symmetrical axes limits.
@@ -159,7 +159,8 @@ def earth_moon_circle_full(filename=None):
     fig, axis = plt.subplots()
 
     # Draw the orbit of the Moon as a circle.
-    orbit_moon = Circle(xy=(0, 0), radius=vl.a_m, ec='g', fc='none', lw=0.5)
+    orbit_moon = Circle(xy=(0, 0), radius=vl.a_m,
+                        ec=vl.ec_orb, fc='none', lw=0.5)
     axis.add_patch(orbit_moon)
 
     # Draw the Earth and Moon as circles.

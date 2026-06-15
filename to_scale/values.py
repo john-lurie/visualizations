@@ -48,6 +48,8 @@ m_m = 7.346e22 / m_e_kg
 fc_e = '#0652ff' # blue
 fc_m = '0.7' # light grey
 fc_s = 'gold'
+# Color of the lines for orbits. 
+ec_orb = 'green'
 
 # Global DPI for saving images
 dpi = 600
