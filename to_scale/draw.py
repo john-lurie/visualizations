@@ -27,13 +27,21 @@ def setup_figure(figure, axis):
     axis.spines['top'].set_visible(False)
 
 
+def save_or_show(filename):
+    """If filename is given: plt.savefig(). Else: plt.show()."""
+    if filename is not None:
+        plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
+    else:
+        plt.show()
+
+
 def earth_moon_size_comparison(filename=None):
     """
     Compare the relative sizes of the Earth and Moon.
     Centers are separated by only one Earth diameter for ease of comparison.
 
     Args:
-        filename (str, optional): Name of the image file. If None: plt.show().
+        filename (str, optional): See save_or_show() docstring.
     """
     fig, axis = plt.subplots()
     
@@ -49,10 +57,7 @@ def earth_moon_size_comparison(filename=None):
     axis.set_ylim(-1.5*vl.r_e, 1.5*vl.r_e)
     setup_figure(fig, axis)
 
-    if filename is not None:
-        plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
-    else:
-        plt.show()
+    save_or_show(filename)
 
 
 def earth_moon_circle_orbit(scale=1.0, filename=None):
@@ -67,7 +72,7 @@ def earth_moon_circle_orbit(scale=1.0, filename=None):
         scale (float, optional): Factor by which to scale down orbit.
             Orbital radius will be divided by this factor.
             Default is 1.0, no scaling.
-        filename (str, optional): Name of the image file. If None plt.show().
+        filename (str, optional): See save_or_show() docstring.
     """
     fig, axis = plt.subplots()
 
@@ -106,10 +111,7 @@ def earth_moon_circle_orbit(scale=1.0, filename=None):
 
     setup_figure(fig, axis)
 
-    if filename is not None:
-        plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
-    else:
-        plt.show()
+    save_or_show(filename)
 
 
 def earth_moon_orbit_scaling(fig_start=None):
@@ -154,7 +156,7 @@ def earth_moon_circle_full(filename=None):
     circles are used here instead.
 
     Args:
-        filename (str, optional): Name of the image file. If None plt.show().
+        filename (str, optional): See save_or_show() docstring.
     """
     fig, axis = plt.subplots()
 
@@ -175,7 +177,4 @@ def earth_moon_circle_full(filename=None):
     axis.set_ylim(-limit, limit)
     setup_figure(fig, axis)
 
-    if filename is not None:
-        plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
-    else:
-        plt.show()
+    save_or_show(filename)
