@@ -27,10 +27,13 @@ def setup_figure(figure, axis):
     axis.spines['top'].set_visible(False)
 
 
-def earth_moon_size_comparison():
+def earth_moon_size_comparison(filename=None):
     """
     Compare the relative sizes of the Earth and Moon.
     Centers are separated by only one Earth diameter for ease of comparison.
+
+    Args:
+        filename (str, optional): Name of the image file. If None: plt.show().
     """
     fig, axis = plt.subplots()
     
@@ -46,8 +49,10 @@ def earth_moon_size_comparison():
     axis.set_ylim(-1.5*vl.r_e, 1.5*vl.r_e)
     setup_figure(fig, axis)
 
-    filename = './figures/figure001-earth_moon_comp.png'
-    plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
+    if filename is not None:
+        plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
+    else:
+        plt.show()
 
 
 def earth_moon_circle_orbit(scale=1.0, filename=None):
@@ -62,8 +67,7 @@ def earth_moon_circle_orbit(scale=1.0, filename=None):
         scale (float, optional): Factor by which to scale down orbit.
             Orbital radius will be divided by this factor.
             Default is 1.0, no scaling.
-        filename (str, optional): Name of the image file.
-            If None, no image will be saved.
+        filename (str, optional): Name of the image file. If None plt.show().
     """
     fig, axis = plt.subplots()
 
@@ -104,9 +108,11 @@ def earth_moon_circle_orbit(scale=1.0, filename=None):
 
     if filename is not None:
         plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
+    else:
+        plt.show()
 
 
-def earth_moon_orbit_scaling():
+def earth_moon_orbit_scaling(fig_start=None):
     """
     Draw the orbit of the Moon at range of different scales.
 
@@ -117,16 +123,22 @@ def earth_moon_orbit_scaling():
 
     The effect of this progression is to steadily decrease the apparent sizes 
     of the Earth and Moon.
+
+    Args:
+        fig_start (int, optional): Starting figure number.
+            For example, if fig_start=2, starting filename is figure002...
     """
     # Scales
     scl = (25, 10, 5, 1)
-    
-    # These figures are part of a larger presentation.
-    # They are preceded by another figure, so the number starts at 2.
-    num = (2, 3, 4, 5)
-    
-    # Iterate over scales.
-    for ii in range(len(scl)):
-        # filename format is figure001-scale001.png
-        filename = f"./figures/figure{num[ii]:03d}-scale{scl[ii]:02d}.png"
-        earth_moon_circle_orbit(scale=scl[ii], filename=filename)
+        
+    if fig_start is not None:
+        # Iterate over scales.
+        for ii in range(len(scl)):
+            # Figure numbers start at fig_start.
+            num = fig_start + ii
+            # filename format is figure000-scale00.png
+            filename = f"./figures/figure{num:03d}-scale{scl[ii]:02d}.png"
+            earth_moon_circle_orbit(scale=scl[ii], filename=filename)
+    else:
+        for ii in range(len(scl)):
+            earth_moon_circle_orbit(scale=scl[ii])
