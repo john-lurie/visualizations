@@ -2,7 +2,7 @@
 Draw the Earth-Sun and Moon-Earth orbits with body radii to scale.
 """
 import matplotlib.pyplot as plt
-from matplotlib.patches import Circle
+from matplotlib.patches import Circle, Ellipse
 from matplotlib.image import imread
 
 import values as vl
@@ -172,6 +172,46 @@ def earth_moon_circle_full(filename=None):
     axis.add_patch(moon)
 
     # The orbit is a circle, so use symmetrical axes limits.
+    limit = 1.2 * vl.a_m
+    axis.set_xlim(-limit, limit)
+    axis.set_ylim(-limit, limit)
+    setup_figure(fig, axis)
+
+    save_or_show(filename)
+
+
+def earth_moon_ellipse_basic(at_focus=True, filename=None):
+    """
+    Draw the Moon's orbit as an ellipse.
+
+    Args:
+        at_focus (bool, optional): Default is to draw the Earth at one focus.
+            if False: Draw the Earth at ellipse center for teaching purposes.
+        filename (str, optional): See save_or_show() docstring.
+    """
+    fig, axis = plt.subplots()
+
+    # Width and height of ellipse are twice semi-major/minor axes.
+    orbit_ell = Ellipse(xy=(0, 0), width=2*vl.a_m, height=2*vl.b_m,
+                        fc='none', ec=vl.ec_orb, lw=0.5)
+    axis.add_patch(orbit_ell)
+
+    # Draw the Moon as a circle.
+    moon = Circle(xy=(vl.a_m, 0), radius=vl.r_m, fc=vl.fc_m)
+    axis.add_patch(moon)
+
+    if at_focus:
+        # Draw the Earth at the right side (positive x-axis) focus.
+        # Use the linear eccentricity to locate the focus.
+        earth = Circle(xy=(vl.c_m, 0), radius=vl.r_e, fc=vl.fc_e)
+        # Put a cross at the center of the ellipse.
+        axis.scatter([0], [0], marker='+', s=10, color='red', lw=0.35)
+    else:
+        # Draw the Earth at the center of the ellipse.
+        earth = Circle(xy=(0, 0), radius=vl.r_e, fc=vl.fc_e)
+    axis.add_patch(earth)
+
+    # The eccentricity is small, so symmetrical limits still work.
     limit = 1.2 * vl.a_m
     axis.set_xlim(-limit, limit)
     axis.set_ylim(-limit, limit)

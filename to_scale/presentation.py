@@ -16,5 +16,13 @@ draw.earth_moon_orbit_scaling(fig_start=2)
 
 # Draw the Moon's orbit as a circle at full scale.
 # With Earth and Moon as circles rather than images.
-file06 = './figures/figure006-earth_moon_full.png'
+file06 = './figures/figure006-earth_moon_circle.png'
 draw.earth_moon_circle_full(filename=file06)
+
+# Draw the Moon's orbit as an ellipse with the Earth at the CENTER.
+file07 = './figures/figure007-ellipse_center.png'
+draw.earth_moon_ellipse_basic(filename=file07, at_focus=False)
+
+# Draw the Moon's orbit as an ellipse with the Earth at ONE FOCUS.
+file08 = './figures/figure008-ellipse_focus.png'
+draw.earth_moon_ellipse_basic(filename=file08)
