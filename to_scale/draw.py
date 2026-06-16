@@ -2,6 +2,7 @@
 Draw the Earth-Sun and Moon-Earth orbits with body radii to scale.
 """
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 from matplotlib.patches import Circle, Ellipse
 from matplotlib.image import imread
 
@@ -221,7 +222,7 @@ def earth_moon_ellipse_basic(at_focus=True, filename=None):
     save_or_show(filename)
 
 
-def earth_moon_barycenter(filename=None):
+def earth_moon_barycenter(filename=None, returns=True):
     """
     Draw the orbit of the Moon around the Earth-Moon barycenter.
 
@@ -230,6 +231,8 @@ def earth_moon_barycenter(filename=None):
 
     Args:
         filename (str, optional): See save_or_show() docstring.
+        returns (bool, optional): If True: return variables for future use.
+            These will be used by the function animate_orbit().
     """
     # Calculate the barycentric ellipses.
     tuple1, tuple2 = orbits.ellipse_params(vl.a_m, vl.m_e, vl.m_m, vl.e_m)
@@ -269,4 +272,93 @@ def earth_moon_barycenter(filename=None):
     axis.set_ylim(-limit, limit)
     setup_figure(fig, axis)
 
-    save_or_show(filename)
+    if returns:
+        # Orbital parameters necessary for animation.
+        params = (a1, a2, c1, c2, b1)
+        return fig, axis, params, moon, earth
+    else:
+        save_or_show(filename)
+
+
+def update(frame, moon_tuple, earth_tuple):
+    """
+    Update the position of patches for Earth and Moon.
+
+    This will be called by matplotlib FuncAnimation().
+
+    Args:
+        frame (int): frame number
+        moon_tuple (tuple): patch and positions for Moon.
+        earth_tuple (tuple): patch and positions for Earth.
+
+    Returns:
+        moon, earth: FuncAnimation() requires the patches to be returned.
+    """
+    # Unpack tuples
+    moon, x_m, y_m = moon_tuple
+    earth, x_e, y_e = earth_tuple 
+
+    # Update positions
+    moon.set_center((x_m[frame], y_m[frame]))
+    earth.set_center((x_e[frame], y_e[frame]))
+
+    return moon, earth
+
+
+def animate_orbit(filename=None, validate=False):
+    """
+    Animate the orbits of the Earth and Moon around their barycenter.
+
+    Args:
+        filename (str, optional): if filename given, save as an MP4 movie.
+            else: plt.show()
+        validate (bool, optional): if True: validate the program.
+            This will exaggerate the eccentricity and Moon's mass so that
+            the geometry is more visible.
+    """
+    if validate:
+        # Exaggerate eccentricity and Moon's mass.
+        vl.m_m *= 10
+        vl.e_m = 0.5
+
+    # Reuse setup for static plot.
+    fig, axis, params, moon, earth = earth_moon_barycenter(returns=True)
+    # Unpack orbital parameters.
+    a_e, a_m, c_e, c_m, b_e = params
+
+    # Timestep in days.
+    dt=0.1
+
+    # Orbital positions are calculated from the focus.
+    # The focus is NOT at the origin. Determined by linear eccentricity.
+    focus = (c_m, 0)
+    x_m, y_m = orbits.positions(vl.P_m, vl.e_m, a_m, dt=dt, focus=focus)
+
+    # left = False ensures the center of Earth's orbit is to right of focus.
+    x_e, y_e = orbits.positions(vl.P_m, vl.e_m, a_e, dt=dt, focus=focus,
+                                left=False)
+
+    # Update the patch positions before starting animation.
+    moon.set_center((x_m[0], y_m[0]))
+    earth.set_center((x_e[0], y_e[0]))
+
+    # Arguments for the update() function.
+    fargs = ((moon, x_m, y_m), (earth, x_e, y_e))
+
+    if validate:
+        # Draw an ellipse for the Earth's orbit around the barycenter.
+        orbit_earth = Ellipse(xy=(c_m+c_e, 0), width=2*a_e, height=2*b_e,
+                              fc='none', ec='yellow', lw=0.5, zorder=-5)
+        axis.add_patch(orbit_earth)
+
+    # Tighten up the margins.
+    fig.subplots_adjust(bottom=0, top=1, left=0, right=1)
+
+    # Run the animation.
+    ani = animation.FuncAnimation(fig=fig, func=update, fargs=fargs,
+                                  frames=len(x_m), interval=20)
+
+    if filename is not None:
+        ani.save(filename=filename, dpi=vl.dpi)
+    else:
+        plt.show()

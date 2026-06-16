@@ -44,12 +44,15 @@ m_e = m_e_kg / m_e_kg
 # Mass of the Moon
 m_m = 7.346e22 / m_e_kg
 
+# Sidereal period of the Moon's orbit in days.
+P_m = 27.322
+
 # Colors of the objects for plotting
 fc_e = '#0652ff' # blue
-fc_m = '0.7' # light grey
+fc_m = 'white'
 fc_s = 'gold'
 # Color of the lines for orbits. 
-ec_orb = 'green'
+ec_orb = 'darkgreen'
 
 # Global DPI for saving images
 dpi = 600

@@ -5,6 +5,8 @@ Earth/Moon-Sun orbits.
 
 The figure files are numbered in the order they will be presented.
 """
+import os
+
 import draw
 
 # Start with circles representing the Earth and Moon, sizes to scale.
@@ -30,3 +32,13 @@ draw.earth_moon_ellipse_basic(filename=file08)
 # Draw the orbits of the Earth and Moon around their barycenter.
 file09 = './figures/figure009_moon_barycenter.png'
 draw.earth_moon_barycenter(filename=file09)
+
+# Animate the orbit of the Earth and Moon around their barycenter.
+# Use matplotlib to create an MP4 for a single orbit.
+draw.animate_orbit(filename='./figures/once.mp4')
+# Repeat to form a loop.
+file10 = './figures/figure010_earth_moon_animate.mp4'
+cmd = "ffmpeg -stream_loop 10 -i ./figures/once.mp4 -c copy -y " + file10
+os.system(cmd)
+# Delete the single oscillation
+os.system("rm -f ./figures/once.mp4")
