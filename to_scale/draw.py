@@ -327,7 +327,7 @@ def animate_orbit(filename=None, validate=False):
     a_e, a_m, c_e, c_m, b_e = params
 
     # Timestep in days.
-    dt=0.1
+    dt=0.025
 
     # Orbital positions are calculated from the focus.
     # The focus is NOT at the origin. Determined by linear eccentricity.

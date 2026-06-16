@@ -38,7 +38,7 @@ draw.earth_moon_barycenter(filename=file09)
 draw.animate_orbit(filename='./figures/once.mp4')
 # Repeat to form a loop.
 file10 = './figures/figure010_earth_moon_animate.mp4'
-cmd = "ffmpeg -stream_loop 10 -i ./figures/once.mp4 -c copy -y " + file10
+cmd = "ffmpeg -stream_loop 4 -i ./figures/once.mp4 -c copy -y " + file10
 os.system(cmd)
 # Delete the single oscillation
 os.system("rm -f ./figures/once.mp4")
