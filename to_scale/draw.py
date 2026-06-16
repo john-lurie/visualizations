@@ -264,7 +264,7 @@ def earth_moon_barycenter(filename=None, returns=True):
     axis.add_patch(bary)
 
     # Draw a cross at the center of the Moon's orbit.
-    axis.scatter([0], [0], marker='+', s=10, color='red', lw=0.35)
+    center = axis.scatter([0], [0], marker='+', s=10, color='red', lw=0.35)
 
     # The eccentricity is small, so symmetrical limits still work.
     limit = 1.2 * vl.a_m
@@ -275,7 +275,7 @@ def earth_moon_barycenter(filename=None, returns=True):
     if returns:
         # Orbital parameters necessary for animation.
         params = (a1, a2, c1, c2, b1)
-        return fig, axis, params, moon, earth
+        return fig, axis, params, moon, earth, center
     else:
         save_or_show(filename)
 
@@ -305,7 +305,7 @@ def update(frame, moon_tuple, earth_tuple):
     return moon, earth
 
 
-def animate_orbit(filename=None, validate=False):
+def animate_orbit(filename=None, validate=False, markcenter=False):
     """
     Animate the orbits of the Earth and Moon around their barycenter.
 
@@ -315,6 +315,7 @@ def animate_orbit(filename=None, validate=False):
         validate (bool, optional): if True: validate the program.
             This will exaggerate the eccentricity and Moon's mass so that
             the geometry is more visible.
+        markcenter (bool, optional): if True: mark center of Moon's orbit.
     """
     if validate:
         # Exaggerate eccentricity and Moon's mass.
@@ -322,9 +323,14 @@ def animate_orbit(filename=None, validate=False):
         vl.e_m = 0.5
 
     # Reuse setup for static plot.
-    fig, axis, params, moon, earth = earth_moon_barycenter(returns=True)
+    fig, axis, params, moon, earth, cen = earth_moon_barycenter(returns=True)
     # Unpack orbital parameters.
     a_e, a_m, c_e, c_m, b_e = params
+
+    if not markcenter:
+        # Don't mark the center. Move it far away.
+        far_away = list(zip([1e9], [1e9]))
+        cen.set_offsets(far_away)
 
     # Timestep in days.
     dt=0.025
