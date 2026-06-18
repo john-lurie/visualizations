@@ -42,3 +42,6 @@ cmd = "ffmpeg -stream_loop 4 -i ./figures/once.mp4 -c copy -y " + file10
 os.system(cmd)
 # Delete the single oscillation
 os.system("rm -f ./figures/once.mp4")
+
+# Animate the rotation of the Earth as it orbits the barycenter.
+draw.rotate_earth()

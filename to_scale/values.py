@@ -45,7 +45,17 @@ m_e = m_e_kg / m_e_kg
 m_m = 7.346e22 / m_e_kg
 
 # Sidereal period of the Moon's orbit in days.
-P_m = 27.322
+# In reality the period is 27.322 days.
+# Here it's exactly 27 to make the Earth's rotation period commensurate.
+P_m = 27.0
+# Sideral rotation period of the Earth in days.
+# In reality, it's slightly less than 1.0.
+P_e = 1.0
+
+# Time step for animation in fraction of a day.
+dt = 0.025
+# Time interval between frames in the animation, in milliseconds.
+interval = 20
 
 # Colors of the objects for plotting
 fc_e = '#0652ff' # blue

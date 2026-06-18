@@ -2,9 +2,11 @@
 Draw the Earth-Sun and Moon-Earth orbits with body radii to scale.
 """
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
+from matplotlib.animation import FuncAnimation
 from matplotlib.patches import Circle, Ellipse
+from matplotlib.lines import Line2D
 from matplotlib.image import imread
+import numpy as np
 
 import orbits
 import values as vl
@@ -361,10 +363,126 @@ def animate_orbit(filename=None, validate=False, markcenter=False):
     fig.subplots_adjust(bottom=0, top=1, left=0, right=1)
 
     # Run the animation.
-    ani = animation.FuncAnimation(fig=fig, func=update, fargs=fargs,
-                                  frames=len(x_m), interval=20)
+    ani = FuncAnimation(fig=fig, func=update, fargs=fargs, frames=len(x_m),
+                        interval=20)
 
     if filename is not None:
         ani.save(filename=filename, dpi=vl.dpi)
+    else:
+        plt.show()
+
+
+def setup_figure_rotation(figure, axis):
+    """
+    Setup a matplotlib figure for an animation of the Earth's rotation.
+
+    The setup needs to be different than the other figures in this module.
+    Hence the separate function.
+    """
+    # A black background resembles outer space.
+    axis.set_facecolor('black')
+    figure.set_facecolor('black')
+
+    # An equal aspect ratio ensures the geometry looks correct.
+    axis.set_aspect(1)
+
+    # Tighten up the margins.
+    figure.subplots_adjust(bottom=0.05, top=0.95, left=0, right=1)
+
+    # Tick marks are unnecessary.
+    axis.get_xaxis().set_ticks([])
+    axis.get_yaxis().set_ticks([])
+
+    # Loop through all spines.
+    for spine in axis.spines.values():
+        spine.set_color('white')
+        spine.set_linewidth(3)
+
+
+def update_rotation(frame, line, earth, xx, yy):
+    """
+    For matplotlib FuncAnimation to update Earth rotation animation.
+
+    Args:
+        frame (int): Frame number is the index for position data arrays.
+        line (matplotlib Line2D): Like a prime meridian to show Earth's rotation.
+        earth (matplotlib Circle): Represents the Earth.
+        xx, yy (numpy.ndarray): Position data.
+    """
+    # Update positions.
+    line.set_xdata(xx[frame])
+    line.set_ydata(yy[frame])
+    earth.set_center((xx[frame][1], yy[frame][1]))
+
+
+def rotate_earth(filename=None):
+    """
+    Animate the Earth rotating as it orbits the Earth-Moon barycenter.
+
+    A line on the Earth is a prime meridian, making the rotation visible.
+
+    Args:
+        filename (str, optional): if filename given, save as an MP4 movie.
+    """
+    # Compute the motion of the Earth's center around barycenter.
+    # FIXME: Hardcode the semi-major axis in the values module, not here.
+    # In this case, the barycenter IS at the origin.
+    x_e, y_e = orbits.positions(vl.P_m, vl.e_m, 0.733, dt=vl.dt, focus=(0,0),
+                                left=False)
+
+    # Array of times for one complete orbit of the Moon.
+    times = np.linspace(0, vl.P_m, int(vl.P_m/vl.dt))
+    # Specify a line representing a prime meridian on the Earth.
+    # The line will rotate CCW through 2pi radians.
+    angles = (2 * np.pi / vl.P_e) * times
+    # The coordinates of the line are: x = [x1, 0.0, x2], y = [y1, 0.0, y2]
+    # Compute the Cartesian coordinates.
+    # The position of Earth's center is added, moving the line with Earth.
+    x1 = -vl.r_e * np.cos(angles) + x_e
+    x2 =  vl.r_e * np.cos(angles) + x_e
+    y1 = -vl.r_e * np.sin(angles) + y_e
+    y2 =  vl.r_e * np.sin(angles) + y_e
+    # The center of the line.
+    zero_x = np.zeros(len(angles)) + x_e
+    zero_y = np.zeros(len(angles)) + y_e
+
+    # Stack the data.
+    xx = np.column_stack((x1, zero_x, x2))
+    yy = np.column_stack((y1, zero_y, y2))
+
+    # Create the figure.
+    fig, axis = plt.subplots()
+
+    # Initialize the line using the first values in the arrays.
+    x_init = np.array([-vl.r_e, 0.0, vl.r_e]) + x_e[0]
+    y_init = np.array([0.0, 0.0, 0.0]) + y_e[0]
+    # capstyle = 'butt' ensures the line does not extend past edge of Earth.
+    line = Line2D(xdata=x_init, ydata=y_init, lw=5, zorder=2, color='firebrick',
+                  solid_capstyle='butt')
+    axis.add_artist(line)
+
+    # Initialize the circle for the Earth.
+    earth = Circle(xy=(x_e[0], y_e[0]), radius=vl.r_e, fc=vl.fc_e)
+    axis.add_patch(earth)
+
+    # Draw a dot at the barycenter, in this case at the origin.
+    bary = Circle(xy=(0, 0), radius=0.1*vl.r_e, fc='orange', zorder=3)
+    axis.add_patch(bary)
+
+    # Set the axes limits.
+    axis.set_xlim(-2, 2)
+    axis.set_ylim(-2, 2)
+
+    # Additional figure setup.
+    setup_figure_rotation(fig, axis)
+
+    # Arguments to pass to update_rotation()
+    fargs = (line, earth, xx, yy)
+    # Run the animation.
+    ani = FuncAnimation(fig=fig, func=update_rotation, fargs=fargs,
+                        frames=len(angles), interval=vl.interval)
+
+    if filename is not None:
+        ani.save(filename, dpi=vl.dpi)
     else:
         plt.show()
