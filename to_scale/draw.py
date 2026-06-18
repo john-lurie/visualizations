@@ -226,7 +226,7 @@ def earth_moon_ellipse_basic(at_focus=True, filename=None):
     save_or_show(filename)
 
 
-def earth_moon_barycenter(filename=None, returns=True):
+def earth_moon_barycenter(filename=None, returns=False):
     """
     Draw the orbit of the Moon around the Earth-Moon barycenter.
 
