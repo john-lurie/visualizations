@@ -45,3 +45,15 @@ os.system("rm -f ./figures/once.mp4")
 
 # Animate the rotation of the Earth as it orbits the barycenter.
 draw.rotate_earth()
+
+# Draw the Sun, Earth, and Moon to scale.
+draw.sun_earth_moon()
+
+# Zoom in to make the Earth and Moon more visible.
+draw.sun_earth_moon(zoom=True)
+
+# Draw the Earth-Sun orbit to scale.
+draw.orbits_sun_earth_moon()
+
+# Zoom in to show the Moon-Earth orbit to scale.
+draw.orbits_sun_earth_moon(zoom=True)

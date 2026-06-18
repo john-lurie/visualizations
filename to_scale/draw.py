@@ -486,3 +486,71 @@ def rotate_earth(filename=None):
         ani.save(filename, dpi=vl.dpi)
     else:
         plt.show()
+
+
+def sun_earth_moon(zoom=False, filename=None):
+    """
+    Draw the Sun, Earth, and Moon to scale.
+
+    Args:
+        zoom (bool, optional): if True: zoom in so Earth and Moon are bigger.
+        filename (str, optional): See save_or_show() docstring.
+    """
+    fig, axis = plt.subplots()
+
+    # Centers of the circles are along the x-axis, offset horizontally.
+    earth = Circle(xy=(5*vl.r_e, 0), radius=vl.r_e, fc=vl.fc_e)
+    moon = Circle(xy=(8*vl.r_e, 0), radius=vl.r_m, fc=vl.fc_m)
+    sun = Circle(xy=(-1*vl.r_s, 0), radius=vl.r_s, fc=vl.fc_s)
+
+    axis.add_patch(sun)
+    axis.add_patch(earth)
+    axis.add_patch(moon)
+
+    setup_figure(fig, axis)
+
+    if zoom:
+        axis.set_xlim(-0.2*vl.r_s, 0.1*vl.r_s)
+        axis.set_ylim(-0.1*vl.r_s, 0.1*vl.r_s)
+    else:
+        axis.set_xlim(-2.1*vl.r_s, 0.1*vl.r_s)
+        axis.set_ylim(-1.1*vl.r_s, 1.1*vl.r_s)
+
+    save_or_show(filename)
+
+
+def orbits_sun_earth_moon(zoom=False, filename=None):
+    """
+    Draw Earth-Sun and Moon-Earth orbits to scale.
+
+    Args:
+        zoom (bool, optional): if True: zoom in to show the Moon-Earth orbit.
+        filename (str, optional): See save_or_show() docstring.
+    """
+    fig, axis = plt.subplots()
+
+    # The Earth's orbit is an ellipse centered at the origin.
+    # Width and height are twice the semi-major/minor axes, respectively.
+    orbit_earth = Ellipse(xy=(0,0), width=2*vl.a_e, height=2*vl.b_e,
+                          ec='purple', fc='none', lw=0.5)
+    axis.add_patch(orbit_earth)
+    # The Sun is located at the right hand focus.
+    sun = Circle(xy=(vl.c_e, 0), radius=vl.r_s, fc=vl.fc_s)
+    axis.add_patch(sun)
+    # For refence, put a cross at the center of the ellipse.
+    axis.scatter([0], [0], marker='+', s=4, color='red', lw=0.35)
+
+    if zoom:
+        # For simplicity, make the Moon's orbit a circle.
+        # The orbit is so small that the eccentricty doesn't matter.
+        orbit_moon = Circle(xy=(vl.a_e, 0), radius=vl.a_m, ec=vl.ec_orb,
+                            fc='none', lw=0.5, zorder=5)
+        axis.add_patch(orbit_moon)
+        axis.set_xlim(0.01*vl.a_e, 1.025*vl.a_e)
+        axis.set_ylim(-0.3*vl.a_e, 0.3*vl.a_e)
+    else:
+        axis.set_xlim(-1.05*vl.a_e, 1.05*vl.a_e)
+        axis.set_ylim(-1.05*vl.a_e, 1.05*vl.a_e)
+
+    setup_figure(fig, axis)
+    save_or_show(filename)
