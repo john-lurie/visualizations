@@ -35,8 +35,10 @@ def save_or_show(filename):
     """If filename is given: plt.savefig(). Else: plt.show()."""
     if filename is not None:
         plt.savefig(filename, bbox_inches='tight', dpi=vl.dpi)
+        plt.close('all')
     else:
         plt.show()
+        plt.close('all')
 
 
 def earth_moon_size_comparison(filename=None):
@@ -48,7 +50,7 @@ def earth_moon_size_comparison(filename=None):
         filename (str, optional): See save_or_show() docstring.
     """
     fig, axis = plt.subplots()
-    
+
     # Earth is centered at the origin.
     earth = Circle(xy=(0, 0), radius=vl.r_e, fc=vl.fc_e)
     axis.add_patch(earth)
@@ -136,7 +138,7 @@ def earth_moon_orbit_scaling(fig_start=None):
     """
     # Scales
     scl = (25, 10, 5, 1)
-        
+
     if fig_start is not None:
         # Iterate over scales.
         for ii in range(len(scl)):
@@ -368,8 +370,10 @@ def animate_orbit(filename=None, validate=False, markcenter=False):
 
     if filename is not None:
         ani.save(filename=filename, dpi=vl.dpi)
+        plt.close('all')
     else:
         plt.show()
+        plt.close('all')
 
 
 def setup_figure_rotation(figure, axis):
@@ -484,8 +488,11 @@ def rotate_earth(filename=None):
 
     if filename is not None:
         ani.save(filename, dpi=vl.dpi)
+        plt.close('all')
+
     else:
         plt.show()
+        plt.close('all')
 
 
 def sun_earth_moon(zoom=False, filename=None):
